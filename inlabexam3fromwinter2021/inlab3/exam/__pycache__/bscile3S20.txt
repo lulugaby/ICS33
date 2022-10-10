@@ -1,0 +1,63 @@
+# Setup
+c-->from imp import reload
+c-->import exam
+c-->reload(exam)
+c-->from exam import tail, NWSD, history_dict
+c-->from ile3helper import ints, primes, hide, nth, nth_for_m, is_prime
+c-->from inspect import isgeneratorfunction, isgenerator
+c-->from goody import irange
+
+# Test tail:
+e-->isgenerator(tail('a','b','c'))-->True
+e-->list(tail(hide('abc'), hide('abcdef'), hide('ab')))-->['d', 'e', 'f']
+e-->list(tail(hide('abcdef'), hide('ab'), hide('abc')))-->['d', 'e', 'f']
+e-->list(tail(hide('ab'), hide('abc'),hide('abcdef')))-->['d', 'e', 'f']
+e-->list(nth_for_m(tail(hide('abcdef'),ints(),hide('abc')),100,10))-->[106, 107, 108, 109, 110, 111, 112, 113, 114, 115]
+
+# Test NWSD
+e-->NWSD(5,{1,2,3,4,5})-->7
+e-->NWSD(10,set(irange(1,10)))-->42
+e-->NWSD(15,set(irange(1,15)))-->176
+e-->NWSD(20,set(irange(1,20)))-->627
+
+# Test history_dict
+c-->d = history_dict(2) # order of 1st four associations below is "mixed up"
+c-->d['d'] = 'd1'
+c-->d['b'] = 'b1'
+c-->d['c'] = 'c1'
+c-->d['a'] = 'a1'
+c-->d['a'] = 'a2'
+c-->d['a'] = 'a3'
+c-->d['a'] = 'a4'
+c-->d['b'] = 'b2'
+c-->d['b'] = 'b3'
+c-->d['c'] = 'c2'
+==-->d.see_count()-->{'a': 4, 'b': 3, 'c': 2, 'd': 1}
+==-->d.see_history()-->{'a': ['a2', 'a3'], 'b': ['b1', 'b2'], 'c': ['c1']}
+e-->d['a']-->a4
+e-->d['b']-->b3
+e-->d['c']-->c2
+e-->d['d']-->d1
+^-->d['x']-->KeyError
+e-->d['a',-1]-->a3
+e-->d['b',-1]-->b2
+e-->d['c',-1]-->c1
+^-->d['d',-1]-->KeyError
+^-->d['x',-1]-->KeyError
+e-->d['a',-2]-->a2
+e-->d['b',-2]-->b1
+^-->d['c',-2]-->KeyError
+^-->d['a',-3]-->KeyError
+^-->d['b',-3]-->KeyError
+c-->d['A'] = 'A1'
+==-->list(d.iter_frequency())-->[('a', 'a4'), ('b', 'b3'), ('c', 'c2'), ('A', 'A1'), ('d', 'd1')]
+
+# Test history_dict: extra credit
+c-->d2 = history_dict(2, [('a',1),('c',3)], b=2, c=4)
+==-->d2-->{'a': 1, 'c': 4, 'b': 2}
+==-->d2.see_count()-->{'a': 1, 'c': 2, 'b': 1}
+==-->d2.see_history()-->{'c': [3]}
+c-->d2 = history_dict(2, {'a': 1,'c': 3}, b=2, c=4)
+==-->d2-->{'a': 1, 'c': 4, 'b': 2}
+==-->d2.see_count()-->{'a': 1, 'c': 2, 'b': 1}
+==-->d2.see_history()-->{'c': [3]}
